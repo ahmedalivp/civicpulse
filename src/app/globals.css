@@ -1,0 +1,323 @@
+:root {
+  /* Primary Brand Colors */
+  --color-civic-green: #2E7D32;
+  /* Trust, Institutions, Action */
+  --color-civic-green-hover: #1B5E20;
+
+  /* Neutrals */
+  --color-neutral-bg: #F5F7F8;
+  /* Clean default background */
+  --color-neutral-surface: #FFFFFF;
+  /* High-contrast card surfaces */
+  --color-neutral-text-strong: #1A1A1A;
+  /* Headings */
+  --color-neutral-text: #4A4A4A;
+  /* Body */
+  --color-neutral-border: #E0E0E0;
+
+  /* Semantic / Status Colors for Pins & Labels */
+  --color-alert-red: #D32F2F;
+  /* Hazard */
+  --color-warning-orange: #F57C00;
+  /* General Issue */
+  --color-success-green: #388E3C;
+  /* Solved / Improvement */
+  --color-info-blue: #1976D2;
+
+  /* Layout & Spacing */
+  --nav-height: 64px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* Typography */
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Dark Mode Manual Toggle Fallback Variables */
+body.dark {
+  --color-neutral-bg: #121212;
+  --color-neutral-surface: #1E1E1E;
+  --color-neutral-text-strong: #E0E0E0;
+  --color-neutral-text: #B3B3B3;
+  --color-neutral-border: #333333;
+  --color-civic-green: #4CAF50;
+  --color-civic-green-hover: #66BB6A;
+}
+
+@media (prefers-color-scheme: dark) {
+  body:not(.light) {
+    --color-neutral-bg: #121212;
+    --color-neutral-surface: #1E1E1E;
+    --color-neutral-text-strong: #E0E0E0;
+    --color-neutral-text: #B3B3B3;
+    --color-neutral-border: #333333;
+    --color-civic-green: #4CAF50;
+    --color-civic-green-hover: #66BB6A;
+  }
+}
+
+/* Reset and Base Styles */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--color-neutral-bg);
+  color: var(--color-neutral-text);
+  font-family: var(--font-primary);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-neutral-text-strong);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Utilities */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+.card {
+  background-color: var(--color-neutral-surface);
+  border: 1px solid var(--color-neutral-border);
+  border-radius: 8px;
+  padding: var(--spacing-md);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--color-civic-green);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-civic-green-hover);
+}
+
+/* Navigation Bar */
+.global-nav {
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-md);
+  background-color: var(--color-neutral-surface);
+  border-bottom: 1px solid var(--color-neutral-border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-center a {
+  margin: 0 var(--spacing-sm);
+  padding: var(--spacing-sm);
+  font-weight: 500;
+  color: var(--color-neutral-text);
+  transition: color 0.2s;
+}
+
+.nav-center a:hover,
+.nav-center a.active {
+  color: var(--color-civic-green);
+}
+
+/* Metrics Dashboard */
+.metrics-dashboard {
+  max-width: 1400px;
+  margin: var(--spacing-md) auto;
+  padding: 0 var(--spacing-md);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.metric-card p.metric-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-civic-green);
+  margin-top: var(--spacing-xs);
+}
+
+/* Base Main Content Grid */
+.grid-layout {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+  display: grid;
+  grid-template-columns: 70% calc(30% - var(--spacing-md));
+  gap: var(--spacing-md);
+  height: calc(100vh - var(--nav-height) - 150px);
+}
+
+.map-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-placeholder {
+  flex-grow: 1;
+  background-color: #E0E0E0;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--spacing-sm);
+  color: var(--color-neutral-text);
+}
+
+.community-feed {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.feed-header {
+  position: sticky;
+  top: 0;
+  background: var(--color-neutral-surface);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-neutral-border);
+}
+
+.feed-tabs {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.feed-tabs button {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: 12px;
+  background-color: var(--color-neutral-bg);
+  font-weight: 500;
+}
+
+.feed-card {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-neutral-border);
+  border-radius: 6px;
+}
+
+.feed-card-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--color-neutral-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Mobile Responsiveness Policy */
+@media (max-width: 768px) {
+  .grid-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+    padding: var(--spacing-sm);
+  }
+
+  .map-view {
+    min-height: 55vh;
+  }
+
+  .global-nav {
+    flex-wrap: wrap;
+    height: auto;
+    padding: var(--spacing-sm) var(--spacing-md);
+    gap: var(--spacing-sm);
+  }
+
+  .nav-center {
+    display: flex;
+    overflow-x: auto;
+    width: 100%;
+    order: 3;
+    padding-bottom: 5px;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Slider for Metrics */
+  .metrics-dashboard {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: var(--spacing-sm);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .metric {
+    min-width: 160px;
+    flex: 0 0 auto;
+  }
+
+  /* Floating Action Button (Mobile Only!) */
+  .floating-report-btn {
+    display: flex !important;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 2000;
+    background-color: var(--color-civic-green);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    font-size: 32px;
+    font-weight: 300;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+
+  .floating-report-btn:active {
+    transform: scale(0.9);
+  }
+}
+
+@media (min-width: 769px) {
+  .floating-report-btn {
+    display: none !important;
+  }
+}
