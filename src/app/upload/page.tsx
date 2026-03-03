@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 
 import NavBar from "@/components/NavBar";
 
-export default function UploadPage() {
+// Extracted inner form so we can wrap it securely with Suspense!
+function UploadForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -71,6 +72,71 @@ export default function UploadPage() {
     };
 
     return (
+        <form onSubmit={handleSubmit} className="card" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)', padding: 'var(--spacing-md)' }}>
+            <div>
+                <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Issue Title</label>
+                <input
+                    type="text"
+                    required
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="e.g. Massive Pothole on Main St"
+                    style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid var(--color-neutral-border)' }}
+                />
+            </div>
+
+            <div>
+                <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Category</label>
+                <select value={category} onChange={(e) => setCategory(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid var(--color-neutral-border)', backgroundColor: 'white' }}>
+                    <option>Infrastructure</option>
+                    <option>Hazard</option>
+                    <option>Event</option>
+                    <option>Improvement</option>
+                </select>
+            </div>
+
+            <div>
+                <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Description</label>
+                <textarea
+                    rows={4}
+                    required
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Provide specific details about the issue..."
+                    style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid var(--color-neutral-border)' }}
+                />
+            </div>
+
+            <div>
+                <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Location / Coordinates</label>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <input type="text" required value={lat} onChange={(e) => setLat(e.target.value)} placeholder="Latitude" style={{ flexGrow: 1, padding: '10px', border: '1px solid var(--color-neutral-border)', borderRadius: '4px' }} />
+                    <input type="text" required value={lng} onChange={(e) => setLng(e.target.value)} placeholder="Longitude" style={{ flexGrow: 1, padding: '10px', border: '1px solid var(--color-neutral-border)', borderRadius: '4px' }} />
+                </div>
+            </div>
+
+            {/* File Upload OS Invoker */}
+            <div style={{ marginBottom: 'var(--spacing-md)' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Attach Evidence Photo (Optional)</label>
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) setImageFile(e.target.files[0]);
+                    }}
+                    style={{ width: '100%', padding: '10px', backgroundColor: 'var(--color-bg-alt)' }}
+                />
+            </div>
+
+            <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px', fontSize: '1.1rem' }}>
+                Submit Report
+            </button>
+        </form>
+    );
+}
+
+export default function UploadPage() {
+    return (
         <div className="layout-container">
             {/* Global Authenticated Navigation */}
             <NavBar />
@@ -81,68 +147,10 @@ export default function UploadPage() {
                     Help improve your community by detailing a civic issue. Please provide a clear description and location.
                 </p>
 
-                <form onSubmit={handleSubmit} className="card" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)', padding: 'var(--spacing-md)' }}>
-                    <div>
-                        <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Issue Title</label>
-                        <input
-                            type="text"
-                            required
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            placeholder="e.g. Massive Pothole on Main St"
-                            style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid var(--color-neutral-border)' }}
-                        />
-                    </div>
-
-                    <div>
-                        <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Category</label>
-                        <select value={category} onChange={(e) => setCategory(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid var(--color-neutral-border)', backgroundColor: 'white' }}>
-                            <option>Infrastructure</option>
-                            <option>Maintenance</option>
-                            <option>Traffic</option>
-                            <option>Public Safety</option>
-                            <option>Other</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Description</label>
-                        <textarea
-                            rows={4}
-                            required
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            placeholder="Provide specific details about the issue..."
-                            style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid var(--color-neutral-border)' }}
-                        />
-                    </div>
-
-                    <div>
-                        <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '8px' }}>Location / Coordinates</label>
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                            <input type="text" required value={lat} onChange={(e) => setLat(e.target.value)} placeholder="Latitude" style={{ flexGrow: 1, padding: '10px', border: '1px solid var(--color-neutral-border)', borderRadius: '4px' }} />
-                            <input type="text" required value={lng} onChange={(e) => setLng(e.target.value)} placeholder="Longitude" style={{ flexGrow: 1, padding: '10px', border: '1px solid var(--color-neutral-border)', borderRadius: '4px' }} />
-                            <button type="button" className="btn" style={{ padding: '0 20px', backgroundColor: '#E0E0E0', borderRadius: '4px' }}>Detect Pin</button>
-                        </div>
-                    </div>
-
-                    {/* File Upload OS Invoker */}
-                    <div style={{ marginBottom: 'var(--spacing-md)' }}>
-                        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Attach Evidence Photo (Optional)</label>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => {
-                                if (e.target.files && e.target.files[0]) setImageFile(e.target.files[0]);
-                            }}
-                            style={{ width: '100%', padding: '10px', backgroundColor: 'var(--color-bg-alt)' }}
-                        />
-                    </div>
-
-                    <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px', fontSize: '1.1rem' }}>
-                        Submit Report
-                    </button>
-                </form>
+                {/* Vercel Safe Pre-Render Boundary */}
+                <Suspense fallback={<p style={{ textAlign: 'center', padding: '20px' }}>Loading Geographic Math...</p>}>
+                    <UploadForm />
+                </Suspense>
             </main>
         </div>
     );
